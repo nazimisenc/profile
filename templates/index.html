@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nazım İsenç</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="#home">Profil</a>
+            <a href="#skills">Yetenekler</a>
+            <a href="#projects">Projeler</a>
+            <a href="#blog">Blog</a>
+        </div>
+    </nav>
+
+    <header id="home">
+        <div class="profile-section">
+            <div class="profile-image-container">
+                <div class="profile-ring"></div>
+                <img src="{{ url_for('static', filename='img/me.jpeg') }}" alt="Profile" class="profile-image"
+                    id="profileImg">
+            </div>
+            <h1>Nazım İsenç</h1>
+            <div class="subtitle">Bilgisayar Mühendisi 👨🏻‍💻</div>
+            <h3 class="category-title" style="color: rgb(230, 220, 220);">🎓 2022-2024 Marmara Üniversitesi Bilgisayar
+                Programcılığı</h3>
+            <h3 class="category-title" style="color: rgb(230, 220, 220);">🎓 2025-2027 İstinye Üniversitesi Bilgisayar
+                Mühendisliği</h3>
+            <div class="contact-links">
+                <a href="https://github.com/nazimisenc" target="_blank" class="contact-btn">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://linkedin.com/in/nazimisenc" target="_blank" class="contact-btn">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="https://instagram.com/nazim.isenc" target="_blank" class="contact-btn">
+                    <i class="fab fa-instagram"></i> Instagram
+                </a>
+            </div>
+        </div>
+    </header>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="container" style="margin-top: -40px; position: relative; z-index: 100;">
+        {% for message in messages %}
+        <div
+            style="background: rgba(96, 165, 250, 0.2); border: 1px solid rgba(96, 165, 250, 0.4); color: #bfdbfe; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        <div class="glass-card" id="skills">
+            <h2>Yetenekler</h2>
+
+            {% set categories = ['Frontend', 'Backend', 'Languages', 'Game'] %}
+            {% set exact_titles = {'Frontend': '🎨 Frontend Geliştirme', 'Backend': '⚙️ Backend & Veritabanı',
+            'Languages': '💻 Programlama Dilleri', 'Game': '🎮 Oyun Geliştirme'} %}
+
+            {% for category in categories %}
+            <div class="skill-category">
+                <h3 class="category-title">{{ exact_titles[category] }}</h3>
+                <div class="skills-grid">
+                    {% for skill in skills %}
+                    {% if skill.category == category %}
+                    <div class="skill-item">
+                        <div class="skill-icon"><i class="{{ skill.icon }}"></i></div>
+                        <div>{{ skill.name }}</div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="glass-card" id="projects">
+            <h2>Projeler</h2>
+
+            <div class="project-filters">
+                <button class="filter-btn active" data-filter="all">Tümü</button>
+                <button class="filter-btn" data-filter="web">Web</button>
+                <button class="filter-btn" data-filter="mobile">Mobil</button>
+                <button class="filter-btn" data-filter="game">Oyun</button>
+            </div>
+
+            <div class="projects-grid">
+                {% for project in projects %}
+                <div class="project-card" data-category="{{ project.category }}">
+                    <div class="project-number">{{ "%02d" % loop.index }}</div>
+                    {% if project.category == 'web' %}
+                    <div class="project-icon">🌐</div>
+                    {% elif project.category == 'mobile' %}
+                    <div class="project-icon">📱</div>
+                    {% elif project.category == 'game' %}
+                    <div class="project-icon">🎮</div>
+                    {% elif project.category == 'ai' %}
+                    <div class="project-icon">🤖</div>
+                    {% else %}
+                    <div class="project-icon">💻</div>
+                    {% endif %}
+
+                    <h3>{{ project.title }}</h3>
+                    <p>{{ project.description }}</p>
+
+                    <div class="project-tags">
+                        {% if project.tags %}
+                        {% for tag in project.tags.split(',') %}
+                        <span class="tag">{{ tag.strip() }}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="project-links" style="align-items: center;">
+                        {% if project.link %}
+                        <a href="{{ project.link }}" target="_blank"
+                            style="color: #60a5fa; text-decoration: none; margin-right: 10px;">Canlı ↗</a>
+                        {% endif %}
+                        {% if project.github_link %}
+                        <a href="{{ project.github_link }}" target="_blank" class="contact-btn"
+                            style="background: linear-gradient(135deg, #374151, #111827); padding: 8px 20px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="glass-card" id="blog">
+            <h2>Blog</h2>
+            <div class="blog-header-actions">
+                <a href="{{ url_for('blog') }}" class="contact-btn"
+                    style="display: inline-flex; padding: 10px 20px; font-size: 0.9em;">Tüm Bloglar ➡️</a>
+            </div>
+            <div class="projects-grid">
+                {% for post in posts %}
+                <div class="project-card">
+                    <img src="{{ post.image_file if post.image_file else url_for('static', filename='img/software.jpg') }}"
+                        style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
+                    <h3>{{ post.title }}</h3>
+                    <p>{{ post.content[:100] }}...</p>
+                    <small style="color: #60a5fa; display: block; margin-bottom: 15px;">{{
+                        post.date_posted.strftime('%d.%m.%Y') }}</small>
+                    <div class="project-links">
+                        <a href="{{ url_for('post', post_id=post.id) }}" class="contact-btn"
+                            style="display: inline-block; padding: 10px 25px; font-size: 0.9em;">Oku</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Nazım İsenç. Soğuk kış gecelerinde kodlarla ısınarak yapıldı ❄️</p>
+    </footer>
+
+    <script>
+        // Profil bölümü için kar taneleri
+        function createProfileSnowflake() {
+            const profileSection = document.querySelector('.profile-section');
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('profile-snowflake');
+            snowflake.innerHTML = '❄';
+
+            const sectionWidth = profileSection.offsetWidth;
+            snowflake.style.left = Math.random() * sectionWidth + 'px';
+            snowflake.style.top = '-10px';
+            snowflake.style.animationDuration = Math.random() * 3 + 6 + 's';
+            snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+            snowflake.style.fontSize = Math.random() * 0.5 + 0.6 + 'em';
+
+            profileSection.appendChild(snowflake);
+
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000);
+        }
+
+        // Profil bölümü kar taneleri - daha sık
+        setInterval(createProfileSnowflake, 200);
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Profil resmi değiştirme
+        const profileImg = document.getElementById('profileImg');
+        profileImg.addEventListener('click', () => {
+            const newImageUrl = prompt('Yeni profil resmi URL\'sini girin:', profileImg.src);
+            if (newImageUrl) {
+                profileImg.src = newImageUrl;
+            }
+        });
+
+        // Proje filtreleme
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const projectCards = document.querySelectorAll('#projects .project-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Aktif butonu güncelle
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.getAttribute('data-filter');
+
+                // Projeleri filtrele
+                projectCards.forEach(card => {
+                    if (filter === 'all') {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'scale(1)';
+                        }, 10);
+                    } else {
+                        const category = card.getAttribute('data-category');
+                        if (category === filter) {
+                            card.style.display = 'block';
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'scale(1)';
+                            }, 10);
+                        } else {
+                            card.style.opacity = '0';
+                            card.style.transform = 'scale(0.8)';
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 0);
+                        }
+                    }
+                });
+            });
+        });
+
+        // Sayfa yüklendiğinde projeleri göster
+        projectCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.4s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    </script>
+    </script>
+
+</body>
+
+</html>

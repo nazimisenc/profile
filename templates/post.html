@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }} - Nazım İsenç</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fas fa-chevron-left"></i> Ana Sayfaya Dön</a>
+        </div>
+    </nav>
+    <div style="margin-top: 100px;"></div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="container" style="margin-top: -20px; position: relative; z-index: 100;">
+        {% for message in messages %}
+        <div
+            style="background: rgba(96, 165, 250, 0.2); border: 1px solid rgba(96, 165, 250, 0.4); color: #bfdbfe; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        <div class="glass-card">
+            <img src="{{ post.image_file if post.image_file else url_for('static', filename='img/software.jpg') }}"
+                style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 15px; margin-bottom: 30px;">
+
+            <h2 style="font-size: 2em; margin-bottom: 20px;">{{ post.title }}</h2>
+            <div style="color: #a78bfa; margin-bottom: 30px;">📅 {{ post.date_posted.strftime('%d.%m.%Y') }}</div>
+
+            <div class="bio" style="max-width: 100%; font-size: 1.2em; white-space: pre-wrap;">{{ post.content }}</div>
+
+
+
+            <!-- Comment Section -->
+            <div style="margin-top: 80px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 50px;">
+
+                <!-- Comment Form -->
+                <div
+                    style="background: rgba(30, 41, 59, 0.5); padding: 40px; border-radius: 20px; margin-bottom: 60px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                    <h4
+                        style="margin-bottom: 30px; font-size: 1.8em; color: #a78bfa; display: flex; align-items: center; gap: 10px;">
+                        💬 Yorum Yap</h4>
+                    <form method="POST">
+                        <div class="form-group">
+                            <input type="text" name="username" placeholder="Adınız" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="content" placeholder="Yorumunuz..." class="form-control"
+                                required></textarea>
+                        </div>
+                        <button type="submit" class="contact-btn"
+                            style="border:none; cursor:pointer; width: 100%; justify-content: center; font-size: 1.1em; padding: 18px;">Gönder
+                            🚀</button>
+                    </form>
+                </div>
+
+                <h3 style="margin-bottom: 30px; font-size: 2em; color: #e2e8f0;">Yorumlar ({{ post.comments|length }})
+                </h3>
+
+                <!-- Comment List -->
+                <div class="comments-list">
+                    {% for comment in post.comments|sort(attribute='date_posted', reverse=True) %}
+                    <div
+                        style="background: rgba(255, 255, 255, 0.03); padding: 25px; border-radius: 15px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s ease;">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center;">
+                            <strong style="color: #60a5fa; font-size: 1.2em;">{{ comment.username }}</strong>
+                            <small
+                                style="color: #94a3b8; background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 20px;">{{
+                                comment.date_posted.strftime('%d.%m.%Y %H:%M') }}</small>
+                        </div>
+                        <p style="color: #cbd5e1; margin: 0; font-size: 1.1em; line-height: 1.6;">{{ comment.content }}
+                        </p>
+                    </div>
+                    {% else %}
+                    <p
+                        style="color: #94a3b8; font-style: italic; text-align: center; padding: 40px; background: rgba(255,255,255,0.02); border-radius: 15px;">
+                        Henüz yorum yapılmamış. İlk yorumu sen yap! 👇</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Nazım İsenç</p>
+    </footer>
+    <!-- Syntax Highlighting (Prism.js) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+
+</body>
+
+</html>

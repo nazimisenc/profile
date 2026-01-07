@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayfa Bulunamadı - 404</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .error-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .error-code {
+            font-size: 8em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            text-shadow: 0 10px 30px rgba(96, 165, 250, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .error-message {
+            font-size: 1.5em;
+            color: #cbd5e1;
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="error-container">
+        <div class="error-code">404</div>
+        <h2 style="font-size: 2em; margin-bottom: 20px;">Oops! Bir şeyler ters gitti.</h2>
+        <p class="error-message">
+            Aradığınız sayfa kara delikte kaybolmuş olabilir veya böyle bir sayfa hiç var olmamış olabilir. 🌌
+        </p>
+        <a href="{{ url_for('home') }}" class="contact-btn">
+            <i class="fas fa-home"></i> Ana Sayfaya Dön
+        </a>
+    </div>
+
+    <!-- Snow Effect -->
+    <script>
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.innerHTML = '❄';
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            snowflake.style.opacity = Math.random();
+            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+            document.body.appendChild(snowflake);
+
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000);
+        }
+        setInterval(createSnowflake, 100);
+    </script>
+
+
+</body>
+
+</html>

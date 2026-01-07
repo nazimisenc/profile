@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Nazım İsenç</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fas fa-chevron-left"></i> Ana Sayfaya Dön</a>
+        </div>
+    </nav>
+    <div style="margin-top: 100px;"></div>
+
+    <div class="container">
+        <div class="glass-card">
+            <h2>📝 Tüm Bloglar</h2>
+            <div class="projects-grid">
+                {% for post in posts %}
+                <div class="project-card">
+                    <img src="{{ post.image_file if post.image_file else url_for('static', filename='img/software.jpg') }}"
+                        style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
+                    <h3 style="font-size: 1.1em;">{{ post.title }}</h3>
+                    <p>{{ post.content[:150] }}...</p>
+                    <small style="color: #60a5fa; display: block; margin-bottom: 15px;">{{
+                        post.date_posted.strftime('%d.%m.%Y') }}</small>
+                    <div class="project-links">
+                        <a href="{{ url_for('post', post_id=post.id) }}" class="contact-btn"
+                            style="display: inline-block; padding: 10px 25px; font-size: 0.9em;">Devamını Oku</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Nazım İsenç</p>
+    </footer>
+    </script>
+
+</body>
+
+</html>
