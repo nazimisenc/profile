@@ -494,6 +494,8 @@ footer {
 @media (max-width: 768px) {
     body {
         background: linear-gradient(135deg, #1b2337 0%, #1e293b 50%, #334155 100%);
+        background-attachment: scroll;
+        /* Performance fix: Avoid repaint on scroll */
     }
 
     h1 {
@@ -506,6 +508,13 @@ footer {
 
     .glass-card {
         padding: 25px;
+        backdrop-filter: none;
+        /* Performance fix: heavy on GPU */
+        -webkit-backdrop-filter: none;
+        background: rgba(30, 41, 59, 0.95);
+        /* Opaque fallback */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .profile-image-container {
@@ -515,6 +524,30 @@ footer {
 
     .profile-section {
         padding: 40px 20px;
+        backdrop-filter: none;
+        /* Performance fix */
+        -webkit-backdrop-filter: none;
+        background: rgba(30, 41, 59, 0.95);
+        box-shadow: none;
+    }
+
+    /* Navbar optimizasyonu */
+    .navbar {
+        top: 15px;
+        padding: 12px 30px;
+        width: 90%;
+        max-width: 400px;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(30, 41, 59, 0.98);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-links {
+        gap: 20px;
+        font-size: 0.9em;
+        width: 100%;
+        justify-content: center;
     }
 
     .contact-links {
@@ -525,8 +558,29 @@ footer {
     .contact-btn {
         width: 80%;
         justify-content: center;
+        box-shadow: none;
+        /* Simplify box-model calc */
     }
 
+    .project-card {
+        padding-bottom: 30px !important;
+        /* Reset padding */
+    }
+
+    .project-links {
+        position: static;
+        /* Remove absolute positioning */
+        margin-top: 20px;
+        justify-content: center;
+        /* Center buttons */
+        padding-right: 0;
+    }
+
+    .project-card:hover {
+        transform: none;
+        /* Disable 3D transforms on hover for mobile touch */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
 }
 
 @media (max-width: 480px) {

@@ -155,7 +155,7 @@
                         post.date_posted.strftime('%d.%m.%Y') }}</small>
                     <div class="project-links">
                         <a href="{{ url_for('post', post_id=post.id) }}" class="contact-btn"
-                            style="display: inline-block; padding: 10px 25px; font-size: 0.9em;">Oku</a>
+                            style="display: inline-flex; justify-content: center; padding: 10px 25px; font-size: 0.9em;">Oku</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -168,9 +168,13 @@
     </footer>
 
     <script>
-        // Profil bölümü için kar taneleri
+
+
+        // Profil bölümü kar taneleri
         function createProfileSnowflake() {
             const profileSection = document.querySelector('.profile-section');
+            if (!profileSection) return;
+
             const snowflake = document.createElement('div');
             snowflake.classList.add('profile-snowflake');
             snowflake.innerHTML = '❄';
@@ -189,8 +193,11 @@
             }, 5000);
         }
 
-        // Profil bölümü kar taneleri - daha sık
-        setInterval(createProfileSnowflake, 200);
+        // Performance Optimization: Reduce snowflake count on mobile
+        const isMobile = window.innerWidth <= 768;
+        const snowflakeInterval = isMobile ? 800 : 200; // 4x slower on mobile
+
+        setInterval(createProfileSnowflake, snowflakeInterval);
 
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -263,7 +270,7 @@
             }, index * 100);
         });
     </script>
-    </script>
+
 
 </body>
 
