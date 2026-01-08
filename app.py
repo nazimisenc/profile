@@ -3,6 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import os
 from models import db, User, Post # Import db from models
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'gizli-anahtar-varsayilan-local')
@@ -75,6 +78,14 @@ from werkzeug.utils import secure_filename
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+# Cloudinary Config
+cloudinary.config(
+    cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key = os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
+    secure = True
+)
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -97,12 +108,17 @@ def admin():
         final_image = None
         
         # Dosya yükleme kontrolü
+        # Dosya yükleme kontrolü
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            # Klasörün var olduğundan emin ol
-            os.makedirs(os.path.join(app.root_path, app.config['UPLOAD_FOLDER']), exist_ok=True)
-            file.save(os.path.join(app.root_path, app.config['UPLOAD_FOLDER'], filename))
-            final_image = url_for('static', filename='uploads/' + filename)
+            # Cloudinary upload
+            upload_result = cloudinary.uploader.upload(file)
+            final_image = upload_result['secure_url']
+            
+            # Eski lokal kayıt kodu (artık kullanılmıyor)
+            # filename = secure_filename(file.filename)
+            # os.makedirs(os.path.join(app.root_path, app.config['UPLOAD_FOLDER']), exist_ok=True)
+            # file.save(os.path.join(app.root_path, app.config['UPLOAD_FOLDER'], filename))
+            # final_image = url_for('static', filename='uploads/' + filename)
         elif image_url:
             final_image = image_url
         
@@ -121,6 +137,18 @@ def admin():
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
+    
+    # Cloudinary'den silme işlemi (Eğer resim Cloudinary URL'i ise)
+    if post.image_file and 'cloudinary.com' in post.image_file:
+        try:
+            # URL'den public_id'yi çıkar
+            # Örnek: https://res.cloudinary.com/demo/image/upload/v1570979139/sample.jpg
+            # public_id: sample
+            public_id = post.image_file.split('/')[-1].split('.')[0]
+            cloudinary.uploader.destroy(public_id)
+        except Exception as e:
+            print(f"Resim silinirken hata: {e}")
+
     db.session.delete(post)
     db.session.commit()
     flash('Yazı silindi.')
